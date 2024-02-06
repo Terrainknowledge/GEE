@@ -402,7 +402,7 @@ var panel = ui.Panel({widgets: [ui.Label(visualization3['min'])],});legend.add(p
 Map.add(legend);
 ```
 
-## Script 05
+## Script 5 Landsat 8 NDVI and Elevation Analysis with Legends
 
 ```javascript
 
@@ -701,7 +701,7 @@ var panel = ui.Panel({widgets: [ui.Label(visualization4['min'])],});legend.add(p
 Map.add(legend);
 ```
 
-## Script 07
+## Script 7 Multi-Layer Analysis: NDVI, Elevation, Rainfall, and Land Cover:
 
 ```javascript
 var dataset = ee
@@ -914,7 +914,7 @@ Map.add(legend);
 
 ```
 
-## Script 08
+## Script 8 Multispectral Analysis and Land Cover:
 
 ```javascript
 var dataset = ee
