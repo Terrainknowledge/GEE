@@ -1,5 +1,6 @@
+![https://terrainknowledge.com/](https://github.com/Terrainknowledge/GEE/assets/7762172/048febda-61a3-4eef-95fb-da8d6b6b8531)
 
-![Logo]([https://e-learning.terrainknowledge.com/pluginfile.php/1/core_admin/logo/0x150/1654377241/Logo-min.png](https://e-learning.terrainknowledge.com/pluginfile.php/1/core_admin/logo/0x150/1654377241/Logo-min.png))
+
 
 # Sensibilité à la dégradation des sols 
 
