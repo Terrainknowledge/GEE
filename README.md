@@ -550,7 +550,7 @@ legend.add(panel);
 Map.add(legend);
 
 ```
-## Script 06
+## Script 6 Multispectral Analysis and Land Characteristics Mapping:
 
 ```javascript
 var dataset = ee.ImageCollection('LANDSAT/LC08/C02/T1_L2').filterDate('2021-08-01', '2021-09-01').filterBounds(roi);
