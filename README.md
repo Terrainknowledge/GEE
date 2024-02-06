@@ -1153,20 +1153,6 @@ Map.addLayer(
 );
 
 //_________________LEGEND_____________________________________________
-/*
-var legend = ui.Panel({style: {position: 'middle-right',padding: '8px 10px'}});
-var legendTitle = ui.Label({value: 'Rainfall',style: {fontWeight: 'bold',fontSize: '15px',margin: '5 0 9px 0',padding: '10'}});
-legend.add(legendTitle);
-var lon = ee.Image.pixelLonLat().select('latitude');
-var gradient = lon.multiply((visualization4.max-visualization4.min)/100.0).add(visualization4.min);
-var legendImage = gradient.visualize(visualization4);
-var panel = ui.Panel({widgets: [ui.Label(visualization4['max'])],});
-legend.add(panel);
-var thumbnail = ui.Thumbnail({image: legendImage,params: {bbox:'0,0,10,90', dimensions:'20x70'},style: {padding: '1px', position: 'bottom-right'}});
-legend.add(thumbnail);
-var panel = ui.Panel({widgets: [ui.Label(visualization4['min'])],});legend.add(panel);
-Map.add(legend);
-*/
 
 // set position of panel
 var legend = ui.Panel({
