@@ -1291,6 +1291,25 @@ Map.add(legend);
 210	Water bodies
 220	Permanent snow and ice
 */
+var roi = ee.FeatureCollection([
+  ee.Feature(
+    ee.Geometry.Polygon(
+      [
+        [
+          [2.9390799818834257, 36.40214349190413],
+          [2.9390799818834257, 35.865329293470964],
+          [3.8893973646959257, 35.865329293470964],
+          [3.8893973646959257, 36.40214349190413],
+        ],
+      ],
+      null,
+      false
+    ),
+    {
+      "system:index": "0",
+    }
+  ),
+]);
 var esa2015 = ee.Image("users/djerririk/ESA2015");
 
 print(esa2015);
@@ -1384,6 +1403,25 @@ Map.add(legend);
 
 ## Script 10 Plant cover:
 ```javascript
+var roi = ee.FeatureCollection([
+  ee.Feature(
+    ee.Geometry.Polygon(
+      [
+        [
+          [2.9390799818834257, 36.40214349190413],
+          [2.9390799818834257, 35.865329293470964],
+          [3.8893973646959257, 35.865329293470964],
+          [3.8893973646959257, 36.40214349190413],
+        ],
+      ],
+      null,
+      false
+    ),
+    {
+      "system:index": "0",
+    }
+  ),
+]);
 
 // modis NDVI
 var modisNDVI = ee.ImageCollection('MODIS/006/MOD13Q1').filterBounds(roi)
@@ -1533,6 +1571,26 @@ Map.add(legend);
 220	Permanent snow and ice
 */
 
+var roi = ee.FeatureCollection([
+  ee.Feature(
+    ee.Geometry.Polygon(
+      [
+        [
+          [2.9390799818834257, 36.40214349190413],
+          [2.9390799818834257, 35.865329293470964],
+          [3.8893973646959257, 35.865329293470964],
+          [3.8893973646959257, 36.40214349190413],
+        ],
+      ],
+      null,
+      false
+    ),
+    {
+      "system:index": "0",
+    }
+  ),
+]);
+
 var esa2015 = ee.Image("users/djerririk/ESA2015");
 print(esa2015);
 
@@ -1666,6 +1724,27 @@ Map.add(legend);
 210	Water bodies
 220	Permanent snow and ice
 */
+
+var roi = ee.FeatureCollection([
+  ee.Feature(
+    ee.Geometry.Polygon(
+      [
+        [
+          [2.9390799818834257, 36.40214349190413],
+          [2.9390799818834257, 35.865329293470964],
+          [3.8893973646959257, 35.865329293470964],
+          [3.8893973646959257, 36.40214349190413],
+        ],
+      ],
+      null,
+      false
+    ),
+    {
+      "system:index": "0",
+    }
+  ),
+]);
+
 var esa2015 = ee.Image("users/djerririk/ESA2015");
 print(esa2015);
 
