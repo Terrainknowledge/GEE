@@ -1310,7 +1310,7 @@ var roi = ee.FeatureCollection([
     }
   ),
 ]);
-var esa2015 = ee.Image("users/djerririk/ESA2015");
+var esa2015 = ee.Image("users/djerririk/ESA2015").clip(roi);
 
 print(esa2015);
 
