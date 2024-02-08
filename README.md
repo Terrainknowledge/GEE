@@ -2055,3 +2055,16 @@ legend.add(panel);
 Map.add(legend);
 
 ```
+
+
+## Script 13 reclass soil carbon:
+
+
+```javascript
+var SOM = SOM_raw.where(SOM_raw.lt(1), 2.00)
+      .where(SOM_raw.gte(1).and(SOM_raw.lte(2)), 1.70)
+      .where(SOM_raw.gt(2).and(SOM_raw.lte(3)), 1.50)
+      .where(SOM_raw.gt(3).and(SOM_raw.lte(6)), 1.20)
+      .where(SOM_raw.gt(6), 1.00)
+      .rename('SOM');
+```
