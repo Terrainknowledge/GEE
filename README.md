@@ -1756,3 +1756,223 @@ legend.add(panel);
 
 Map.add(legend);
 ```
+
+## Script 13 VQI Vegetation Quality Index:
+
+
+```javascript
+//VQI = (FR*EP*DR*PC).POW(1/4)
+
+var roi = ee.FeatureCollection([
+  ee.Feature(
+    ee.Geometry.Polygon(
+      [
+        [
+          [2.9390799818834257, 36.40214349190413],
+          [2.9390799818834257, 35.865329293470964],
+          [3.8893973646959257, 35.865329293470964],
+          [3.8893973646959257, 36.40214349190413],
+        ],
+      ],
+      null,
+      false
+    ),
+    {
+      "system:index": "0",
+    }
+  ),
+]);
+
+var esa2015 = ee.Image("users/djerririk/ESA2015");
+
+Map.addLayer(esa2015);
+
+//---------------------------------------------------------------------
+
+var DR = esa2015
+  .remap(
+    [
+      200, 201, 202, 190, 11, 130, 150, 153, 10, 30, 40, 120, 151, 152, 20, 100,
+      122, 12, 81, 82, 110, 62, 72, 80, 121, 60, 70, 71, 180, 50, 61, 90, 140,
+      160, 170,
+    ],
+    [
+      2.0, 2.0, 2.0, 2.0, 1.6, 1.6, 1.6, 1.6, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.4,
+      1.4, 1.4, 1.3, 1.3, 1.3, 1.3, 1.2, 1.2, 1.2, 1.2, 1.1, 1.1, 1.1, 1.1, 1.0,
+      1.0, 1.0, 1.0, 1.0, 1.0,
+    ]
+  )
+  .rename("DR");
+
+print(DR);
+
+Map.addLayer(DR, {}, "DR");
+//---------------------------------------------------------------------
+
+var EP = esa2015
+  .remap(
+    [
+      200, 201, 202, 190, 11, 10, 150, 153, 12, 120, 122, 151, 152, 30, 81, 82,
+      20, 40, 62, 130, 72, 80, 110, 100, 121, 170, 180, 60, 70, 140, 50, 61, 71,
+      90, 160,
+    ],
+    [
+      2.0, 2.0, 2.0, 2.0, 1.8, 1.7, 1.7, 1.7, 1.6, 1.6, 1.6, 1.6, 1.6, 1.5, 1.5,
+      1.5, 1.4, 1.4, 1.4, 1.4, 1.3, 1.3, 1.3, 1.2, 1.2, 1.2, 1.2, 1.1, 1.1, 1.1,
+      1.0, 1.0, 1.0, 1.0, 1.0,
+    ]
+  )
+  .rename("EP");
+
+print(EP);
+
+Map.addLayer(EP, {}, "EP");
+
+//---------------------------------------------------------------------
+var FR = esa2015
+  .remap(
+    [
+      62, 121, 30, 70, 100, 10, 11, 20, 40, 60, 110, 120, 122, 50, 61, 71, 80,
+      81, 82, 130, 150, 153, 12, 72, 151, 152, 90, 170, 180, 140, 160, 200, 201,
+      202, 190,
+    ],
+    [
+      1.7, 1.6, 1.5, 1.5, 1.5, 1.4, 1.4, 1.4, 1.4, 1.4, 1.4, 1.4, 1.4, 1.3, 1.3,
+      1.3, 1.3, 1.3, 1.3, 1.3, 1.3, 1.3, 1.2, 1.2, 1.2, 1.2, 1.1, 1.1, 1.1, 1.0,
+      1.0, 1.0, 1.0, 1.0, 1.0,
+    ]
+  )
+  .rename("FR");
+print(FR);
+
+Map.addLayer(FR, {}, "FR");
+//---------------------------------------------------------------------
+
+// modis NDVI
+var modisNDVI = ee
+  .ImageCollection("MODIS/006/MOD13Q1")
+  .filterBounds(roi)
+  .select("NDVI")
+  .map(function (img) {
+    var rescaled_NDVI = img
+      .select("NDVI")
+      .multiply(0.0001)
+      .rename("NDVI_rescaled");
+    return img.addBands(rescaled_NDVI);
+  });
+
+//make a list of years and filter the modisNDVI
+var ndviMean = ee.List.sequence(2013, 2023, 1).map(function (year) {
+  var start = ee.Number(year);
+  var end = start.add(ee.Number(1));
+  var ndviMeanYear = modisNDVI
+    .select("NDVI_rescaled")
+    .filter(ee.Filter.calendarRange(start, end, "year"))
+    .mean();
+  return ndviMeanYear.set("year", start);
+});
+
+ndviMean = ee.Image(ndviMean.get(0));
+
+//------------------------------------------------------------------------------------------------------------------------------------
+
+// Remap values.
+var PC = ee
+  .Image(1)
+  .where(ndviMean.gt(-1.0).and(ndviMean.lte(0.1)), 2.0)
+  .where(ndviMean.gt(0.1).and(ndviMean.lte(0.11)), 1.9)
+  .where(ndviMean.gt(0.11).and(ndviMean.lte(0.13)), 1.8)
+  .where(ndviMean.gt(0.13).and(ndviMean.lte(0.18)), 1.7)
+  .where(ndviMean.gt(0.18).and(ndviMean.lte(0.26)), 1.6)
+  .where(ndviMean.gt(0.26).and(ndviMean.lte(0.38)), 1.5)
+  .where(ndviMean.gt(0.38).and(ndviMean.lte(0.5)), 1.4)
+  .where(ndviMean.gt(0.5).and(ndviMean.lte(0.62)), 1.3)
+  .where(ndviMean.gt(0.62).and(ndviMean.lte(0.72)), 1.2)
+  .where(ndviMean.gt(0.72).and(ndviMean.lte(0.8)), 1.1)
+  .where(ndviMean.gt(0.8).and(ndviMean.lte(1.0)), 1.0)
+  .rename("PC");
+
+print(PC);
+
+Map.addLayer(PC, {}, "PC");
+
+var VQI = FR.multiply(EP)
+  .multiply(DR)
+  .multiply(PC)
+  .pow(ee.Image(0.25))
+  .rename("VQI");
+
+print(VQI);
+
+// calculate the min and max value of an image
+var minMax = VQI.reduceRegion({
+  reducer: ee.Reducer.minMax(),
+  geometry: roi,
+  scale: 300,
+  maxPixels: 10e9,
+  tileScale: 16,
+});
+
+print("minMax", minMax);
+
+var palette = ["#44ce1b", "#bbdb44", "#f7e379", "#f2a134", "#e51f1f"];
+
+var visParams = {
+  min: 1.19,
+  max: 1.64,
+  palette: palette,
+};
+
+Map.addLayer(VQI.clip(roi), visParams, "Vegetation Quality Index (VQI)");
+
+Map.centerObject(roi);
+
+// set styling
+var styling1 = { color: "red", fillColor: "00000000" };
+
+Map.addLayer(roi.style(styling1));
+
+//_________________LEGEND_____________________________________________
+
+var legend = ui.Panel({
+  style: { position: "middle-right", padding: "8px 10px" },
+});
+
+var legendTitle = ui.Label({
+  value: "VQI",
+  style: {
+    fontWeight: "bold",
+    fontSize: "15px",
+    margin: "5 0 9px 0",
+    padding: "10",
+  },
+});
+
+legend.add(legendTitle);
+
+var lon = ee.Image.pixelLonLat().select("latitude");
+
+var gradient = lon
+  .multiply((visParams.max - visParams.min) / 100.0)
+  .add(visParams.min);
+
+var legendImage = gradient.visualize(visParams);
+
+var panel = ui.Panel({ widgets: [ui.Label(visParams["max"])] });
+
+legend.add(panel);
+
+var thumbnail = ui.Thumbnail({
+  image: legendImage,
+  params: { bbox: "0,0,10,90", dimensions: "20x70" },
+  style: { padding: "1px", position: "bottom-right" },
+});
+
+legend.add(thumbnail);
+
+var panel = ui.Panel({ widgets: [ui.Label(visParams["min"])] });
+legend.add(panel);
+
+Map.add(legend);
+
+```
